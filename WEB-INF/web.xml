@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app 
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+
+	<!-- General description of your web application -->
+
+	<display-name>ARIADNE Harvester</display-name>
+	<description></description>
+
+	<!--CharsetFilter start-->
+
+	<filter>
+		<filter-name>Charset Filter</filter-name>
+		<filter-class>org.ariadne.util.CharsetFilter</filter-class>
+		<init-param>
+			<param-name>requestEncoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>Charset Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!--CharsetFilter end-->
+	
+	<!-- For Quartz -->
+	<!--
+		listener>
+		<listener-class>somewhere.web.UTF8EncodingRequestListener</listener-class>
+		</listener
+	-->
+	<servlet>
+		<servlet-name>QuartzInitializer</servlet-name>
+		<servlet-class>
+			org.quartz.ee.servlet.QuartzInitializerServlet
+		</servlet-class>
+		<init-param>
+			<param-name>shutdown-on-unload</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>20</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>InitCronServlet</servlet-name>
+		<servlet-class>
+			org.ariadne.oai.config.servlet.cron.InitCronServlet
+		</servlet-class>
+		<load-on-startup>30</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>InitPropServlet</servlet-name>
+		<display-name>Properties Initialisation Servlet</display-name>
+		<servlet-class>org.ariadne.config.InitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>log4j-init</servlet-name>
+		<servlet-class>
+			org.ariadne.oai.config.servlet.logging.Log4jInit
+		</servlet-class>
+		<init-param>
+			<param-name>log4j-init-file</param-name>
+			<param-value>oai_log.properties</param-value>
+		</init-param>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>UpdateValidationPropertiesServlet</servlet-name>
+		<servlet-class>org.ariadne.oai.config.servlet.UpdateValidationPropertiesServlet</servlet-class>
+		<init-param>
+			<param-name>validation-properties-file</param-name>
+			<param-value>install/validation.properties</param-value>
+		</init-param>
+		<load-on-startup>10</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>AxisServlet</servlet-name>
+		<display-name>Apache-Axis Servlet</display-name>
+		<servlet-class>
+			org.apache.axis2.transport.http.AxisServlet
+		</servlet-class>
+	</servlet>
+
+	<!--
+		Define mappings that are used by the servlet container to translate a
+		particular request URI (context-relative) to a particular servlet. The
+		examples below correspond to the servlet descriptions above. Thus, a
+		request URI like: http://localhost:8080/{contextpath}/graph will be
+		mapped to the "graph" servlet, while a request like:
+
+		http://localhost:8080/{contextpath}/saveCustomer.do will be mapped to
+		the "controller" servlet. You may define any number of servlet
+		mappings, including zero. It is also legal to define more than one
+		mapping for the same servlet, if you wish to.
+	-->
+
+	<servlet-mapping>
+		<servlet-name>AxisServlet</servlet-name>
+		<url-pattern>/servlet/AxisServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AxisServlet</servlet-name>
+		<url-pattern>*.jws</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AxisServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
+	<!--
+		servlet-mapping> <servlet-name>SOAPMonitorService</servlet-name>
+		<url-pattern>/SOAPMonitor</url-pattern> </servlet-mapping
+	-->
+	<!--
+		Define the default session timeout for your application, in minutes.
+		From a servlet or JSP page, you can modify the timeout for a
+		particular session dynamically by using
+		HttpSession.getMaxInactiveInterval().
+	-->
+
+	<session-config>
+		<session-timeout>30</session-timeout><!-- 30 minutes -->
+	</session-config>
+	<!-- security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Protected Area</web-resource-name>
+			<url-pattern>/install/*</url-pattern>
+		</web-resource-collection>
+		
+		<web-resource-collection>
+<web-resource-name>Protected Area</web-resource-name>
+<url-pattern>/start/*</url-pattern>
+<url-pattern>/configuration/*</url-pattern>
+<url-pattern>/css/*</url-pattern>
+<url-pattern>/images/*</url-pattern>
+<url-pattern>/includes/*</url-pattern>
+<url-pattern>/init/*</url-pattern>
+<url-pattern>/install/*</url-pattern>
+<url-pattern>/log/*</url-pattern>
+<url-pattern>/mds/*</url-pattern>
+</web-resource-collection> 
+		
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint-->
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+
+	<security-role>
+		<role-name>admin</role-name>
+	</security-role>
+</web-app>

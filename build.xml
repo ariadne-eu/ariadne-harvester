@@ -1,0 +1,140 @@
+<project name="oaiHarvester" default="target.dist" basedir=".">
+  
+  <property name="lib.dir" value="${basedir}/WEB-INF/lib"/>
+  <property name="src.dir" value="${basedir}/src"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="dist.dir" value="${basedir}/dist"/>
+  <property name="dist.build.dir" value="${dist.dir}/build"/>
+  <property name="prop.dir" value="install"/>
+  <property name="css.dir" value="css"/>
+  <property name="config.dir" value="configuration"/>
+  <property name="init.dir" value="init"/>
+  <property name="image.dir" value="images"/>
+  <property name="include.dir" value="includes"/>
+  <property name="start.dir" value="start"/>
+  	<property name="rss.dir" value="rss"/>
+  <property name="log.dir" value="log"/>
+  <property name="mds.dir" value="mds"/>
+  <property name="dist.war" value="oaiharvester.war"/>
+  
+  <target name="clean">
+    <delete dir="${dist.dir}"/>
+  </target>
+
+ <target name="compile">
+    <mkdir dir="${build.dir}"/>
+    <javac srcdir="${src.dir}"
+            debug="yes"
+            destdir="${build.dir}"
+    		target="1.5"
+	        includes="org/ariadne/**">
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="target.dist" depends="clean,compile">
+    
+    <mkdir dir="${dist.build.dir}"/>
+    <mkdir dir="${dist.build.dir}/WEB-INF"/>
+    <mkdir dir="${dist.build.dir}/${prop.dir}"/>
+    <mkdir dir="${dist.build.dir}/${css.dir}"/>
+   	<mkdir dir="${dist.build.dir}/${config.dir}"/>
+  	<mkdir dir="${dist.build.dir}/${init.dir}"/>
+    <mkdir dir="${dist.build.dir}/${image.dir}"/>
+    <mkdir dir="${dist.build.dir}/${include.dir}"/>
+    <mkdir dir="${dist.build.dir}/${start.dir}"/>
+    <mkdir dir="${dist.build.dir}/${log.dir}"/>
+    <mkdir dir="${dist.build.dir}/${mds.dir}"/>
+  	<mkdir dir="${dist.build.dir}/${rss.dir}"/>
+  	
+    <copy todir="${dist.build.dir}/WEB-INF/lib" filtering="no">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      	<exclude name="servletapi-2.3.jar"/>
+      	<exclude name="rebuildMACE.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${dist.build.dir}/${prop.dir}" filtering="no">
+      <fileset dir="${prop.dir}">
+        <include name="*.properties"/>
+      	<include name="*.jsp"/>
+      	<include name="*.xsl"/>
+      	<include name="ariadneV4.template"/>
+      	<exclude name="ariadneV4.properties"/>
+      </fileset>
+    </copy>
+  	
+  	<copy file="${dist.build.dir}/${prop.dir}/ariadneV4.template" tofile="${dist.build.dir}/${prop.dir}/ariadneV4.properties"/>
+    
+  	<copy todir="${dist.build.dir}/${css.dir}" filtering="no">
+      <fileset dir="${css.dir}">
+      </fileset>
+    </copy>
+    
+    <copy todir="${dist.build.dir}/${config.dir}" filtering="no">
+      <fileset dir="${config.dir}">
+      </fileset>
+    </copy>
+  	
+    <copy todir="${dist.build.dir}/${init.dir}" filtering="no">
+      <fileset dir="${init.dir}">
+      </fileset>
+    </copy>
+    
+    <copy todir="${dist.build.dir}/${image.dir}" filtering="no">
+      <fileset dir="${image.dir}">
+      </fileset>
+    </copy>
+    
+    <copy todir="${dist.build.dir}/${include.dir}" filtering="no">
+      <fileset dir="${include.dir}">
+      </fileset>
+    </copy>
+    
+    <copy todir="${dist.build.dir}/${start.dir}" filtering="no">
+      <fileset dir="${start.dir}">
+      </fileset>
+    </copy>
+  	
+    <copy todir="${dist.build.dir}/${rss.dir}" filtering="no">
+      <fileset dir="${rss.dir}">
+      </fileset>
+    </copy>
+  	
+    <copy todir="${dist.build.dir}" filtering="no">
+      <fileset dir="">
+      	<include name="index.jsp"/>
+      </fileset>
+    </copy>
+  	
+    <copy todir="${dist.build.dir}/WEB-INF/classes" filtering="no">
+      <fileset dir="${build.dir}">
+        <include name="**/*.class"/>
+      	<exclude name="**/RebuildMACEJob.class"/>
+      </fileset>
+      <fileset dir="${prop.dir}">
+      	<include name="log4j.properties"/>
+      </fileset>
+    </copy>
+  	
+  	<delete dir="${build.dir}"/>
+  
+    <war destfile="${dist.dir}/${dist.war}" webxml="${basedir}/WEB-INF/web.xml">
+      <fileset dir="${dist.build.dir}"/>
+    </war>
+  	
+  	<copy todir="/work/builds" filtering="no">
+  	      <fileset dir="${dist.dir}">
+  	      <include name="${dist.war}"/>
+  	      </fileset>
+  	    </copy>
+  	  	
+  </target>
+	
+
+</project>
