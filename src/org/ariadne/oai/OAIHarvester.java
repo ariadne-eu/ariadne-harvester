@@ -152,10 +152,16 @@ public class OAIHarvester {
 				OAIRecord oaiRecord = records.getCurrentItem();
 
 				if (oaiRecord != null) {
-					if(oaiRecord.isIdentifierOnly()) {
-						oaiRecord = sessionProperties.getRepository().getRecord(oaiRecord.getIdentifier(), repoProperties.getMetadataPrefix());
+					try {
+						if (oaiRecord.isIdentifierOnly()) {
+
+							oaiRecord = sessionProperties.getRepository().getRecord(oaiRecord.getIdentifier(),
+									repoProperties.getMetadataPrefix());
+						}
+						record.setOaiRecord(oaiRecord);
+					} catch (OAIException e) {
+						harvestlogger.error("Error ODE Identifier:" + oaiRecord.getIdentifier());
 					}
-					record.setOaiRecord(oaiRecord);
 				}else {
 					harvestlogger.error("ARCHIVING ERROR : there is no CurrentItem at " + counter);
 					result.updateHarvestStatus(ERR);
@@ -167,7 +173,7 @@ public class OAIHarvester {
 				result.updateHarvestStatus(recordHarvestStatus);
 			}
 			if(recordHarvestStatus > OK || record.getMetadata() == null) {
-				if(record.getOaiRecord().deleted()) {
+				if (record.getOaiRecord() != null && record.getOaiRecord().deleted()) {
 					result.addDeletedRecord(record);
 				}
 				result.addMetadataRecord(null);
