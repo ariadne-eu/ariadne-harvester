@@ -199,7 +199,7 @@ public class TestOaiTarget extends Test {
 			setSolution("");
 		}
 		if (token != null) {
-			String resumptionQuery = reposProps.getBaseURL() + "?verb=ListRecords&resumptionToken=" + token;
+			String resumptionQuery = ListRecordsQuery + "&resumptionToken=" + token;
 			try {
 				URL url = new URL(resumptionQuery);
 				HttpURLConnection http = (HttpURLConnection) url.openConnection();
