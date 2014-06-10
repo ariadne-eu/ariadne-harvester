@@ -44,7 +44,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -505,7 +508,22 @@ public class OAIHarvester {
 		String internalId = repoProps.getRepositoryIdentifierInteral();
 		String baseUrl = repoProps.getBaseURL();
 		String from = repoProps.getLatestHarvestedDatestamp();
-		String until = OaiUtils.calcUntil(untilDate, repoProps.getGranularity());
+		String until = "";
+		if (repoProps.getHarvestInterval() != null && new Integer(repoProps.getHarvestInterval()) > 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fromDate = null;
+			try {
+				fromDate = sdf.parse(from);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(fromDate);
+				cal.add(Calendar.DAY_OF_MONTH, new Integer(repoProps.getHarvestInterval()));
+				until = sdf.format(cal.getTime());
+			} catch (Exception e1) {
+				until = OaiUtils.calcUntil(untilDate, repoProps.getGranularity());
+			}
+		} else {
+			until = OaiUtils.calcUntil(untilDate, repoProps.getGranularity());
+		}
 		sessionProps.setUntil(until);
 		Vector<String> sets = OaiUtils.getSets(repoProps.getHarvestingSet());
 
