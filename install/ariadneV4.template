@@ -2,7 +2,7 @@
 ## Registry properties ##
 #########################
 
-registry.name =
+registry.name = 
 registry.url = 
 
 ###########################
@@ -10,44 +10,44 @@ registry.url =
 ###########################
 
 #The batch size for harvesting
-Harvest.batchSize = 300
+Harvest.batchSize = 100
 #The priority in which to choose the harvesting format
-Harvest.Priority = oai_lom;oai_dc
+Harvest.Priority = lomes;oai_lom;oai_dc
 #Harvest.allStores = harvestToSpi;harvestToDisk;harvestToLucene
 Harvest.storeTo = harvestToDisk
 Harvest.addGlobalLOIdentifier = false
-Harvest.addGlobalMetadataIdentifier = false
-Harvest.metadataProvider.source =
+Harvest.addGlobalMetadataIdentifier = true
+Harvest.metadataProvider.source = 
 Harvest.metadataProvider.value = provider
 Harvest.limitMode.on = false
 Harvest.limitMode.limit = 20
-Harvest.maxRetryMinutes = 5
+Harvest.maxRetryMinutes = 2
 Harvest.retryLimit = 3
-Harvest.validation = true
+Harvest.validation = false
 Harvest.validation.trackErrors = false
-Harvest.validation.scheme = none
+Harvest.validation.scheme = 
 Harvest.afterHarvestJob.enabled = false
 Harvest.afterHarvestJob.class = org.ariadne.oai.config.servlet.cron.GroupErrorLogsJob
-Harvest.afterHarvestJob.outputDir = /work/workspaces/workspace/OaiHarvester/log/zips
+Harvest.afterHarvestJob.outputDir = /opt/LOM-ES_metadata/
 
 #Cronjob properties
-cron.enabled = false
+cron.enabled = true
 cron.schedule.seconds = 0
-cron.schedule.minutes = 14
-cron.schedule.hours = 5
+cron.schedule.minutes = 28
+cron.schedule.hours = 6
 cron.schedule.day_month = *
 cron.schedule.month = *
 cron.schedule.day_week = ?
 
 #Identifier usage
 # NOTE : Fallback option is the OAI Identifier
-genericwriter.identifier.xpath.query.1 = //lom:metaMetadata/lom:identifier[lom:catalog="URI"]/lom:entry
-genericwriter.identifier.xpath.query.2 = //lom:general/lom:identifier[lom:catalog="URI"]/lom:entry
-genericwriter.identifier.xpath.query.3 = //lom:metaMetadata/lom:identifier/lom:catalog[text()="oai"]/parent::*/lom:entry
-genericwriter.identifier.xpath.query.4 = //lom:general/lom:identifier/lom:catalog[text()="oai"]/parent::*/lom:entry
-genericwriter.identifier.xpath.query.5 = //lom:metaMetadata/lom:identifier/lom:entry
-genericwriter.identifier.xpath.query.6 = //lom:general/lom:identifier/lom:entry
-genericwriter.identifier.xpath.ns.1.prefix = lom
+genericwriter.identifier.xpath.query.1 = //lomes:general/lomes:identifier[lomes:catalog="Catálogo unificado mec-red.es-ccaa de identificación de ODE"]/lomes:entry
+genericwriter.identifier.xpath.query.2 = //lomes:general/lomes:identifier[lomes:catalog="meducacion_agrega"]/lomes:entry
+genericwriter.identifier.xpath.query.3 = //lomes:general/lomes:identifier[lomes:catalog="Plataforma Agrega"]/lomes:entry
+genericwriter.identifier.xpath.query.4 = //lomes:general/lomes:identifier[lomes:catalog="Agrega"]/lomes:entry
+genericwriter.identifier.xpath.query.5 = //lomes:general/lomes:identifier/lomes:catalog[text()="mec-red.es-ccaa"]/parent::*/lomes:entry
+genericwriter.identifier.xpath.query.6 = //lomes:metaMetadata/lomes:identifier[lomes:catalog="URI"]/lomes:entry
+genericwriter.identifier.xpath.ns.1.prefix = lomes
 genericwriter.identifier.xpath.ns.1.uri = http://ltsc.ieee.org/xsd/LOM
 genericwriter.identifier.xpath.ns.2.prefix = ilox
 genericwriter.identifier.xpath.ns.2.uri = http://www.imsglobal.org/xsd/imslorsltitm_v1p0
@@ -59,9 +59,9 @@ harvestToLucene.repositoryIdentifier = lomcatalog.ariadne.org
 
 #Properties needed to harvest to disk
 harvestToDisk.writerClassName = org.ariadne.oai.harvestWriter.FileWriter
-harvestToDisk.URI = 
-harvestToDisk.sets = false 
-harvestToDisk.debug = false
+harvestToDisk.URI = /opt/LOM-ES_metadata/
+harvestToDisk.sets = false
+harvestToDisk.debug = true
 
 #Properties needed to harvest to a SPI Target
 harvestToSpi.writerClassName = org.ariadne.oai.harvestWriter.SpiWriter
@@ -76,10 +76,10 @@ harvestToSpi.Session.password =
 harvestToSpiDev.writerClassName = org.ariadne.oai.harvestWriter.SpiDevWriter
 #Set the timeout of the SPI client
 harvestToSpiDev.timeout = 120
-harvestToSpiDev.URI =
-harvestToSpiDev.Session.URI =
-harvestToSpiDev.Session.username =
-harvestToSpiDev.Session.password =
+harvestToSpiDev.URI = 
+harvestToSpiDev.Session.URI = 
+harvestToSpiDev.Session.username = 
+harvestToSpiDev.Session.password = 
 
 #Properties needed to harvest to a CEN Soap SPI Target
 harvestToCenSoapSpi.writerClassName = org.ariadne.oai.harvestWriter.CenSpiWriter
@@ -105,7 +105,7 @@ mapper.mapperClassName.ESEMapper = org.ariadne.mapping.ESEMapper
 
 #The directory where the log files are written
 #NOTE : Do not forget the tailing "/" for the logDirectory
-log.logDirectory = 
+log.logDirectory = /var/log/oaiharvester/
 log.logFile = harvester
 log.repositoryLogs = false
 # History view properties
@@ -114,6 +114,25 @@ log.view.reload = 5
 log.view.length = 100
 
 # All locally registered OAI Targets
-AllTargets.list = 
+AllTargets.list = agrega_educacion_es
 
 # Targets parameters
+agrega_educacion_es.registryIdentifier.entry = 
+agrega_educacion_es.registryIdentifier.catalog = 
+agrega_educacion_es.transformationID = 
+agrega_educacion_es.baseURL = http://agrega.educacion.es//oaipmh/OaiPmhRequest/OaiPmhRequest.do
+agrega_educacion_es.metadataPrefix = lomes
+agrega_educacion_es.latestHarvestedDatestamp = 2009-01-01
+agrega_educacion_es.providerName = 
+agrega_educacion_es.granularity = YYYY-MM-DD
+agrega_educacion_es.metadataFormat = LOM
+agrega_educacion_es.repositoryIdentifier = agrega.es
+agrega_educacion_es.active = Yes
+agrega_educacion_es.autoReset = false
+agrega_educacion_es.validationUri = 
+agrega_educacion_es.repositoryName = Agrega
+agrega_educacion_es.harvestingSet = 
+agrega_educacion_es.skipPreOaiTest = true
+agrega_educacion_es.harvestByGetRecord = true
+agrega_educacion_es.statusLastHarvest = 0
+agrega_educacion_es.harvestInterval = -1

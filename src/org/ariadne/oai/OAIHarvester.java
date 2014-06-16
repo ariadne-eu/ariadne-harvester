@@ -44,7 +44,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -152,10 +155,16 @@ public class OAIHarvester {
 				OAIRecord oaiRecord = records.getCurrentItem();
 
 				if (oaiRecord != null) {
-					if(oaiRecord.isIdentifierOnly()) {
-						oaiRecord = sessionProperties.getRepository().getRecord(oaiRecord.getIdentifier(), repoProperties.getMetadataPrefix());
+					try {
+						if (oaiRecord.isIdentifierOnly()) {
+
+							oaiRecord = sessionProperties.getRepository().getRecord(oaiRecord.getIdentifier(),
+									repoProperties.getMetadataPrefix());
+						}
+						record.setOaiRecord(oaiRecord);
+					} catch (OAIException e) {
+						harvestlogger.error("Error ODE Identifier:" + oaiRecord.getIdentifier());
 					}
-					record.setOaiRecord(oaiRecord);
 				}else {
 					harvestlogger.error("ARCHIVING ERROR : there is no CurrentItem at " + counter);
 					result.updateHarvestStatus(ERR);
@@ -167,7 +176,7 @@ public class OAIHarvester {
 				result.updateHarvestStatus(recordHarvestStatus);
 			}
 			if(recordHarvestStatus > OK || record.getMetadata() == null) {
-				if(record.getOaiRecord().deleted()) {
+				if (record.getOaiRecord() != null && record.getOaiRecord().deleted()) {
 					result.addDeletedRecord(record);
 				}
 				result.addMetadataRecord(null);
@@ -340,7 +349,7 @@ public class OAIHarvester {
 			}
 			int length = records.getCompleteSize();
 			if (length > 0 & resumptionRecords == null)
-				harvestlogger.debug("Total number of records to parse : " + length);
+				harvestlogger.info("Total number of records to parse : " + length);
 			return parse(records, repoProperties, sessionProps);
 		} else {
 			String msg = "-- HARVESTING INTERRUPTED --";
@@ -446,10 +455,15 @@ public class OAIHarvester {
 								resumptionRecords = result.getRecordList();
 								size = records.size();
 							} else {
+								harvestlogger.info("Stopping on records.size<=0....");
 								stop = true;
 							}
-						} else
+						} else{
+							harvestlogger.info("Stopping on no more items....CompleteSize:"
+	              + (resumptionRecords!=null ? resumptionRecords.getCompleteSize() : "") + "-CurrentIndex:"
+	              + (resumptionRecords!=null ? resumptionRecords.getCurrentIndex() : "");
 							stop = true;
+						}
 					}
 					moveFileInvalidRecords(repoProperties.getRepositoryIdentifierInteral());
 					String msg = "Successfully harvested " + harvestedCount + " records.";
@@ -499,7 +513,22 @@ public class OAIHarvester {
 		String internalId = repoProps.getRepositoryIdentifierInteral();
 		String baseUrl = repoProps.getBaseURL();
 		String from = repoProps.getLatestHarvestedDatestamp();
-		String until = OaiUtils.calcUntil(untilDate, repoProps.getGranularity());
+		String until = "";
+		if (repoProps.getHarvestInterval() != null && new Integer(repoProps.getHarvestInterval()) > 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fromDate = null;
+			try {
+				fromDate = sdf.parse(from);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(fromDate);
+				cal.add(Calendar.DAY_OF_MONTH, new Integer(repoProps.getHarvestInterval()));
+				until = sdf.format(cal.getTime());
+			} catch (Exception e1) {
+				until = OaiUtils.calcUntil(untilDate, repoProps.getGranularity());
+			}
+		} else {
+			until = OaiUtils.calcUntil(untilDate, repoProps.getGranularity());
+		}
 		sessionProps.setUntil(until);
 		Vector<String> sets = OaiUtils.getSets(repoProps.getHarvestingSet());
 

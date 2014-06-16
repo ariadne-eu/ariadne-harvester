@@ -1,0 +1,119 @@
+#########################
+## Registry properties ##
+#########################
+
+registry.name =
+registry.url = 
+
+###########################
+## Harvesting properties ##
+###########################
+
+#The batch size for harvesting
+Harvest.batchSize = 300
+#The priority in which to choose the harvesting format
+Harvest.Priority = oai_lom;oai_dc
+#Harvest.allStores = harvestToSpi;harvestToDisk;harvestToLucene
+Harvest.storeTo = harvestToDisk
+Harvest.addGlobalLOIdentifier = false
+Harvest.addGlobalMetadataIdentifier = false
+Harvest.metadataProvider.source =
+Harvest.metadataProvider.value = provider
+Harvest.limitMode.on = false
+Harvest.limitMode.limit = 20
+Harvest.maxRetryMinutes = 5
+Harvest.retryLimit = 3
+Harvest.validation = true
+Harvest.validation.trackErrors = false
+Harvest.validation.scheme = none
+Harvest.afterHarvestJob.enabled = false
+Harvest.afterHarvestJob.class = org.ariadne.oai.config.servlet.cron.GroupErrorLogsJob
+Harvest.afterHarvestJob.outputDir = /work/workspaces/workspace/OaiHarvester/log/zips
+
+#Cronjob properties
+cron.enabled = false
+cron.schedule.seconds = 0
+cron.schedule.minutes = 14
+cron.schedule.hours = 5
+cron.schedule.day_month = *
+cron.schedule.month = *
+cron.schedule.day_week = ?
+
+#Identifier usage
+# NOTE : Fallback option is the OAI Identifier
+genericwriter.identifier.xpath.query.1 = //lom:metaMetadata/lom:identifier[lom:catalog="URI"]/lom:entry
+genericwriter.identifier.xpath.query.2 = //lom:general/lom:identifier[lom:catalog="URI"]/lom:entry
+genericwriter.identifier.xpath.query.3 = //lom:metaMetadata/lom:identifier/lom:catalog[text()="oai"]/parent::*/lom:entry
+genericwriter.identifier.xpath.query.4 = //lom:general/lom:identifier/lom:catalog[text()="oai"]/parent::*/lom:entry
+genericwriter.identifier.xpath.query.5 = //lom:metaMetadata/lom:identifier/lom:entry
+genericwriter.identifier.xpath.query.6 = //lom:general/lom:identifier/lom:entry
+genericwriter.identifier.xpath.ns.1.prefix = lom
+genericwriter.identifier.xpath.ns.1.uri = http://ltsc.ieee.org/xsd/LOM
+genericwriter.identifier.xpath.ns.2.prefix = ilox
+genericwriter.identifier.xpath.ns.2.uri = http://www.imsglobal.org/xsd/imslorsltitm_v1p0
+
+#Properties needed to harvest to a luceneIndex
+harvestToLucene.writerClassName = org.ariadne.oai.harvestWriter.LuceneWriter
+harvestToLucene.URI = 
+harvestToLucene.repositoryIdentifier = lomcatalog.ariadne.org
+
+#Properties needed to harvest to disk
+harvestToDisk.writerClassName = org.ariadne.oai.harvestWriter.FileWriter
+harvestToDisk.URI = 
+harvestToDisk.sets = false 
+harvestToDisk.debug = false
+
+#Properties needed to harvest to a SPI Target
+harvestToSpi.writerClassName = org.ariadne.oai.harvestWriter.SpiWriter
+#Set the timeout of the SPI client
+harvestToSpi.timeout = 120
+harvestToSpi.URI = 
+harvestToSpi.Session.URI = 
+harvestToSpi.Session.username = 
+harvestToSpi.Session.password = 
+
+#Properties needed to harvest to a SPIDev Target
+harvestToSpiDev.writerClassName = org.ariadne.oai.harvestWriter.SpiDevWriter
+#Set the timeout of the SPI client
+harvestToSpiDev.timeout = 120
+harvestToSpiDev.URI =
+harvestToSpiDev.Session.URI =
+harvestToSpiDev.Session.username =
+harvestToSpiDev.Session.password =
+
+#Properties needed to harvest to a CEN Soap SPI Target
+harvestToCenSoapSpi.writerClassName = org.ariadne.oai.harvestWriter.CenSpiWriter
+#Set the timeout of the SPI client
+harvestToCenSoapSpi.timeout = 120
+harvestToCenSoapSpi.URI = 
+harvestToCenSoapSpi.Session.URI = 
+harvestToCenSoapSpi.Session.username = 
+harvestToCenSoapSpi.Session.password = 
+
+mapper.Lom2IloxMapper.transformer_xsl_path = /work/workspaces/workspace/OaiHarvester/install/lom2iloxOaiMapper.xsl
+mapper.Ilox2LomMapper.transformer_xsl_path = /work/workspaces/workspace/OaiHarvester/install/ilox2lomOaiMapper.xsl
+#mapper.oaicat.eun.org.mapperClassName = org.ariadne.mapping.Lom2IloxMapper
+mapper.mapperClassName.LRE3 = org.ariadne.mapping.Lom2IloxMapper
+mapper.mapperClassName.ILOXtoLOM = org.ariadne.mapping.Ilox2LomMapper
+mapper.mapperClassName.dspace.kids-d.org = org.ariadne.mapping.TCUMapper
+mapper.mapperClassName.retro.seals.ch = org.ariadne.mapping.BSOMapper
+mapper.mapperClassName.scam.kmr.se = org.ariadne.mapping.BSOMapper
+mapper.mapperClassName.LOMnoMID = org.ariadne.mapping.AddMetadataIdMapper
+mapper.mapperClassName.NSDLToLOM = org.ariadne.mapping.NSDLMapper
+mapper.mapperClassName.IMS1p2p4Lom = org.ariadne.mapping.IMS1p2p4LomMapper
+mapper.mapperClassName.ESEMapper = org.ariadne.mapping.ESEMapper
+
+#The directory where the log files are written
+#NOTE : Do not forget the tailing "/" for the logDirectory
+log.logDirectory = 
+log.logFile = harvester
+log.repositoryLogs = false
+# History view properties
+log.view.inverse = true
+log.view.reload = 5
+log.view.length = 100
+
+# All locally registered OAI Targets
+AllTargets.list = 
+
+# Targets parameters

@@ -128,7 +128,7 @@
       <fileset dir="${dist.build.dir}"/>
     </war>
   	
-  	<copy todir="/work/builds" filtering="no">
+  	<copy todir="/home/ogonzalez/Aplicaciones/apache-tomcat-7.0.53/webapps" filtering="no">
   	      <fileset dir="${dist.dir}">
   	      <include name="${dist.war}"/>
   	      </fileset>

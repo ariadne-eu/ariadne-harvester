@@ -8,6 +8,7 @@ public class ReposProperties {
 	public static String repositoryIdentifier = "repositoryIdentifier";
 	public static String providerName = "providerName";
 	public static String latestHarvestedDatestamp = "latestHarvestedDatestamp";
+  public static String harvestInterval = "harvestInterval";
 	public static String active = "active";
 	public static String metadataPrefix = "metadataPrefix";
 	public static String metadataFormat = "metadataFormat";
@@ -35,6 +36,7 @@ public class ReposProperties {
 		defaultProperties.put(repositoryName, "");
 		defaultProperties.put(repositoryIdentifier, "");
 		defaultProperties.put(latestHarvestedDatestamp, "1000-01-01T00:00:00Z");
+		defaultProperties.put(harvestInterval, "-1");
 		defaultProperties.put(active, "Yes");
 		defaultProperties.put(metadataPrefix, "oai_lom");
 		defaultProperties.put(metadataFormat, "LOM");
@@ -64,6 +66,14 @@ public class ReposProperties {
 
 	public void setLatestHarvestedDatestamp(String latestHarvestedDatestamp) {
 		properties.put(ReposProperties.latestHarvestedDatestamp, latestHarvestedDatestamp);
+	}
+
+	public String getHarvestInterval() {
+		return properties.get(harvestInterval);
+	}
+
+	public void setHarvestInterval(String harvestInterval) {
+		properties.put(ReposProperties.harvestInterval, harvestInterval);
 	}
 
 	public String getActive() {
