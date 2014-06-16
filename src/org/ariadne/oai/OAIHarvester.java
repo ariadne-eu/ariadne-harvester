@@ -349,7 +349,7 @@ public class OAIHarvester {
 			}
 			int length = records.getCompleteSize();
 			if (length > 0 & resumptionRecords == null)
-				harvestlogger.debug("Total number of records to parse : " + length);
+				harvestlogger.info("Total number of records to parse : " + length);
 			return parse(records, repoProperties, sessionProps);
 		} else {
 			String msg = "-- HARVESTING INTERRUPTED --";
@@ -455,10 +455,15 @@ public class OAIHarvester {
 								resumptionRecords = result.getRecordList();
 								size = records.size();
 							} else {
+								harvestlogger.info("Stopping on records.size<=0....");
 								stop = true;
 							}
-						} else
+						} else{
+							harvestlogger.info("Stopping on no more items....CompleteSize:"
+	              + (resumptionRecords!=null ? resumptionRecords.getCompleteSize() : "") + "-CurrentIndex:"
+	              + (resumptionRecords!=null ? resumptionRecords.getCurrentIndex() : "");
 							stop = true;
+						}
 					}
 					moveFileInvalidRecords(repoProperties.getRepositoryIdentifierInteral());
 					String msg = "Successfully harvested " + harvestedCount + " records.";
